@@ -39,6 +39,8 @@ LevelA::~LevelA(){
     delete m_game_state.background;
     
     // add music stuff
+    Mix_FreeChunk(m_game_state.jump_sfx);
+    Mix_FreeMusic(m_game_state.bgm);
 }
 
 
@@ -78,7 +80,7 @@ void LevelA::initialise(){
     );
     
     m_game_state.player->set_position(glm::vec3(5.0f, 0.0f, 0.0f));
-    m_game_state.player->set_lives(3);
+    //m_game_state.player->set_lives(3);
     
     m_game_state.player->set_jumping_power(3.0f);
     m_game_state.player->update(0, m_game_state.player, NULL, 0, m_game_state.map);
@@ -101,7 +103,7 @@ void LevelA::initialise(){
     }
 
 
-    m_game_state.enemies[0].set_position(glm::vec3(0.0f, 0.0f, 0.0f));
+    m_game_state.enemies[0].set_position(glm::vec3(4.0f, 0.0f, 0.0f));
     m_game_state.enemies[0].update(0, &m_game_state.enemies[0], NULL, 0, m_game_state.map);
     
     
@@ -126,7 +128,7 @@ void LevelA::initialise(){
     Mix_VolumeMusic(10.0f);
     
     m_game_state.jump_sfx = Mix_LoadWAV("assets/BounceYoFrankie.wav");
-    m_game_state.wolf_sfx = Mix_LoadMUS("assets/wolf_monster.mp3");
+    //m_game_state.wolf_sfx = Mix_LoadMUS("assets/wolf_monster.mp3");
 
     
 }
@@ -135,7 +137,7 @@ void LevelA::update(float delta_time)
 {
     
     m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, ENEMY_COUNT, m_game_state.map);
-    m_game_state.enemies[0].update(0, m_game_state.player, &m_game_state.enemies[0], ENEMY_COUNT, m_game_state.map);
+    m_game_state.enemies[0].update(delta_time, m_game_state.player, NULL, NULL, m_game_state.map);
         
         if (m_game_state.player->get_position().y < -10.0f) m_game_state.next_scene_id = 1;
     
@@ -147,15 +149,16 @@ void LevelA::render(ShaderProgram *g_shader_program)
     m_game_state.background->render(g_shader_program);
     m_game_state.map->render(g_shader_program);
     m_game_state.player->render(g_shader_program);
-    for (int i = 0; i < m_number_of_enemies; i++)
-            m_game_state.enemies[i].render(g_shader_program);
+    m_game_state.enemies[0].render(g_shader_program);
     
     if (!m_game_state.player->m_is_active) {
-        Utility::draw_text(g_shader_program, m_font_a, "Game Over", 1.0f, -0.65f, glm::vec3(-3.2f, 0.0f, 0.0f));
-    } else {
+        Utility::draw_text(g_shader_program, m_font_a, "Game Over", 1.0f, -0.5f, glm::vec3(5.2f, -2.0f, 0.0f));
+
+    }else {
         std::string lives_text = "Lives: " + std::to_string(m_game_state.player->m_lives);
      
         Utility::draw_text(g_shader_program, m_font_a, lives_text, 1.0f, -0.65, glm::vec3(7.0f, -0.5f, 0.0f));
+        
     }
     
     

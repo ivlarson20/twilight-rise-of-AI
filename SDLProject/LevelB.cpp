@@ -138,14 +138,15 @@ void LevelB::initialise(){
 }
 
 void LevelB::update(float delta_time){
-    if (m_game_state.player->get_lives() <= 0) return;
+    
+  
     
     m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, 2, m_game_state.map);
+    m_game_state.enemies[0].update(delta_time, m_game_state.player, NULL, NULL, m_game_state.map);
+    m_game_state.enemies[1].update(delta_time, m_game_state.player, NULL, NULL, m_game_state.map);
+        
+        if (m_game_state.player->get_position().y < -10.0f) m_game_state.next_scene_id = 2;
     
-    if (m_game_state.player->m_is_hit == true){
-        int curr = m_game_state.player->get_lives();
-        m_game_state.player->set_lives(curr - 1);
-    }
 
 }
 

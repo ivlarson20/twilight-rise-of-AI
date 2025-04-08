@@ -137,8 +137,11 @@ void LevelC::initialise(){
 
 void LevelC::update(float delta_time)
 {
-
+    
     m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, ENEMY_COUNT, m_game_state.map);
+    m_game_state.enemies[0].update(delta_time, m_game_state.player, NULL, NULL, m_game_state.map);
+        
+      //  if (m_game_state.player->get_position().y < -10.0f) m_game_state.next_scene_id = 1;
     
     for (int i = 0; i < ENEMY_COUNT; i++){
         Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
