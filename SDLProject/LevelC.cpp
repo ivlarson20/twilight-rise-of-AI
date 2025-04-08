@@ -154,6 +154,10 @@ void LevelC::update(float delta_time)
         m_game_state.enemies[i].update(delta_time, m_game_state.player, NULL, NULL, m_game_state.map);
     }
     
+    if (m_game_state.player->m_wins){
+        Mix_PlayMusic(m_game_state.win_sfx, -1);
+        Mix_VolumeMusic(10.0f);
+    }
 
     
 }
@@ -168,7 +172,7 @@ void LevelC::render(ShaderProgram *g_shader_program)
             m_game_state.enemies[i].render(g_shader_program);
     m_game_state.edward->render(g_shader_program);
     
-    if (!m_game_state.player->m_is_active) {
+    if (!m_game_state.player->m_is_active && !m_game_state.player->m_wins) {
         Utility::draw_text(g_shader_program, m_font_c, "Game Over", 1.0f, -0.5f, glm::vec3(5.2f, -2.0f, 0.0f));
     } else {
         std::string lives_text = "Lives: " + std::to_string(m_game_state.player->m_lives);
@@ -176,7 +180,8 @@ void LevelC::render(ShaderProgram *g_shader_program)
         Utility::draw_text(g_shader_program, m_font_c, lives_text, 1.0f, -0.65, glm::vec3(7.0f, -0.5f, 0.0f));
     }
     if (m_game_state.player->m_wins){
-        Utility::draw_text(g_shader_program, m_font_c, "You Win!!", 1.0f, -0.5f, glm::vec3(5.2f, -2.0f, 0.0f));
+        Utility::draw_text(g_shader_program, m_font_c, "You Win!!", 1.0f, -0.5f, glm::vec3(11.0f, -1.0f, 0.0f));
+        m_game_state.player->deactivate();
     }
     
    
