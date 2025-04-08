@@ -77,6 +77,8 @@ void Entity::ai_ambush(Entity *player)
 
 void Entity::ai_guard(Entity *player)
 {
+    std::cout<< "Guard AI Running!" << std::endl;
+
     switch (m_ai_state) {
         case IDLE:
             if (glm::distance(m_position, player->get_position()) < 3.0f) m_ai_state = WALKING;
@@ -401,7 +403,7 @@ void Entity::update(float delta_time, Entity *player, Entity *collidable_entitie
     check_collision_x(collidable_entities, collidable_entity_count);
     check_collision_x(map);
 
-    if (m_entity_type == ENEMY || m_entity_type == WOLF && player != nullptr && player->m_is_active)
+    if ((m_entity_type == ENEMY || m_entity_type == WOLF) && player != nullptr && player->m_is_active)
     {
         if (check_collision(player))
         {

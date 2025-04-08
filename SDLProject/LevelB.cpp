@@ -110,8 +110,7 @@ void LevelB::initialise(){
     m_game_state.enemies[1].set_texture_id(enemy2_texture_id); // blondie
     m_game_state.enemies[0].set_ai_type(WALKER);
     m_game_state.enemies[1].set_ai_type(GUARD);
-    m_game_state.enemies[1].update(0, &m_game_state.enemies[0], NULL, 0, m_game_state.map);
-    m_game_state.enemies[1].update(0, &m_game_state.enemies[1], NULL, 0, m_game_state.map);
+    m_game_state.enemies[1].set_ai_state(WALKING);
 
 
   
@@ -161,7 +160,7 @@ void LevelB::render(ShaderProgram *program)
             m_game_state.enemies[i].render(program);
     
     if (!m_game_state.player->m_is_active) {
-        Utility::draw_text(program, m_font_b, "Game Over", 1.0f, -0.65f, glm::vec3(5.2f, -2.0f, 0.0f));
+        Utility::draw_text(program, m_font_b, "Game Over", 1.0f, -0.5f, glm::vec3(5.2f, -2.0f, 0.0f));
     } else {
         std::string lives_text = "Lives: " + std::to_string(m_game_state.player->m_lives);
      
