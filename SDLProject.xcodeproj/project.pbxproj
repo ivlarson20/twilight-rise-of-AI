@@ -13,6 +13,9 @@
 		C23733F02DA2D99800BEA208 /* LevelA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C23733EF2DA2D99600BEA208 /* LevelA.cpp */; };
 		C23733F22DA2DA0800BEA208 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C23733F12DA2DA0800BEA208 /* Scene.cpp */; };
 		C23733F62DA2DB5C00BEA208 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C23733F52DA2DB5C00BEA208 /* Utility.cpp */; };
+		C23733F92DA2EB6700BEA208 /* LevelB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C23733F82DA2EB6500BEA208 /* LevelB.cpp */; };
+		C23733FC2DA2F58E00BEA208 /* LevelC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C23733FB2DA2F58D00BEA208 /* LevelC.cpp */; };
+		C23733FF2DA338C000BEA208 /* StartScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C23733FE2DA338BF00BEA208 /* StartScreen.cpp */; };
 		DBDF1B532323DE3F007CECB1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBDF1B522323DE3F007CECB1 /* main.cpp */; };
 		DBDF1B5E2323DE8D007CECB1 /* ShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBDF1B5D2323DE8D007CECB1 /* ShaderProgram.cpp */; };
 		DBDF1B612323DE9E007CECB1 /* shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = DBDF1B5C2323DE8D007CECB1 /* shaders */; };
@@ -49,6 +52,12 @@
 		C23733F32DA2DA0E00BEA208 /* Scene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
 		C23733F42DA2DB5700BEA208 /* Utility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
 		C23733F52DA2DB5C00BEA208 /* Utility.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Utility.cpp; sourceTree = "<group>"; };
+		C23733F72DA2EB5B00BEA208 /* LevelB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelB.h; sourceTree = "<group>"; };
+		C23733F82DA2EB6500BEA208 /* LevelB.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LevelB.cpp; sourceTree = "<group>"; };
+		C23733FA2DA2F58700BEA208 /* LevelC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelC.h; sourceTree = "<group>"; };
+		C23733FB2DA2F58D00BEA208 /* LevelC.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LevelC.cpp; sourceTree = "<group>"; };
+		C23733FD2DA338B200BEA208 /* StartScreen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StartScreen.h; sourceTree = "<group>"; };
+		C23733FE2DA338BF00BEA208 /* StartScreen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StartScreen.cpp; sourceTree = "<group>"; };
 		DBDF1B4F2323DE3F007CECB1 /* SDLProject */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SDLProject; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBDF1B522323DE3F007CECB1 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		DBDF1B592323DE8D007CECB1 /* ShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderProgram.h; sourceTree = "<group>"; };
@@ -112,8 +121,14 @@
 				C23733F12DA2DA0800BEA208 /* Scene.cpp */,
 				C23733F32DA2DA0E00BEA208 /* Scene.h */,
 				DBDF1B522323DE3F007CECB1 /* main.cpp */,
+				C23733FD2DA338B200BEA208 /* StartScreen.h */,
+				C23733FE2DA338BF00BEA208 /* StartScreen.cpp */,
+				C23733FA2DA2F58700BEA208 /* LevelC.h */,
+				C23733FB2DA2F58D00BEA208 /* LevelC.cpp */,
 				C23733EE2DA2D98E00BEA208 /* LevelA.h */,
 				C23733EF2DA2D99600BEA208 /* LevelA.cpp */,
+				C23733F72DA2EB5B00BEA208 /* LevelB.h */,
+				C23733F82DA2EB6500BEA208 /* LevelB.cpp */,
 				8493D151286BFEC300217CD6 /* Entity.cpp */,
 				8493D152286BFEC300217CD6 /* Entity.h */,
 			);
@@ -188,11 +203,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C23733FF2DA338C000BEA208 /* StartScreen.cpp in Sources */,
 				C23733F62DA2DB5C00BEA208 /* Utility.cpp in Sources */,
 				C23733F22DA2DA0800BEA208 /* Scene.cpp in Sources */,
+				C23733FC2DA2F58E00BEA208 /* LevelC.cpp in Sources */,
 				DBDF1B532323DE3F007CECB1 /* main.cpp in Sources */,
 				DBDF1B5E2323DE8D007CECB1 /* ShaderProgram.cpp in Sources */,
 				8493D153286BFEC300217CD6 /* Entity.cpp in Sources */,
+				C23733F92DA2EB6700BEA208 /* LevelB.cpp in Sources */,
 				C23733ED2DA202F000BEA208 /* Map.cpp in Sources */,
 				C23733F02DA2D99800BEA208 /* LevelA.cpp in Sources */,
 			);

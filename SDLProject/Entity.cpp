@@ -1,3 +1,13 @@
+/**
+* Author: [Isabelle Larson]
+* Assignment: Rise of the AI
+* Date due: 2025-04-07, 11:59pm
+* I pledge that I have completed this assignment without
+* collaborating with anyone else, in conformance with the
+* NYU School of Engineering Policies and Procedures on
+* Academic Misconduct.
+**/
+
 #define GL_SILENCE_DEPRECATION
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -24,6 +34,14 @@ void Entity::ai_activate(Entity *player)
         case GUARD:
             ai_guard(player);
             break;
+        
+        case WOLF:
+            ai_wolf();
+            break;
+            
+        case WIN:
+            break;
+        
             
         default:
             break;
@@ -55,6 +73,28 @@ void Entity::ai_guard(Entity *player)
             
         default:
             break;
+    }
+}
+
+void Entity::ai_wolf(){
+    m_movement = glm::vec3(m_wolf_direction*1.0f, 0.0f, 0.0f);
+    
+    if (m_position.x <= m_left_bound){
+        m_wolf_direction = 1;
+    }
+    else if (m_position.x >= m_right_bound){
+        m_wolf_direction = -1;
+    }
+    
+}
+
+void Entity::lose_life(){
+    m_lives --;
+    if (m_lives <= 0){
+        m_is_active = false;
+    }
+    else {
+        m_position = glm::vec3(1.0f, 0.0f, 0.0f);   // could change this 
     }
 }
 // Default constructor
@@ -293,6 +333,7 @@ void const Entity::check_collision_x(Map *map)
 }
 void Entity::update(float delta_time, Entity *player, Entity *collidable_entities, int collidable_entity_count, Map *map)
 {
+    if(m_lives <= 0 && m_entity_type == ENEMY) deactivate();
     if (!m_is_active) return;
  
     m_collided_top    = false;
@@ -342,6 +383,16 @@ void Entity::update(float delta_time, Entity *player, Entity *collidable_entitie
     
     m_model_matrix = glm::mat4(1.0f);
     m_model_matrix = glm::translate(m_model_matrix, m_position);
+    m_model_matrix = glm::scale(m_model_matrix, m_scale);
+    std::cout << "Entity type: " << m_entity_type << " | Position: "
+              << m_position.x << ", " << m_position.y << std::endl;
+
+    std::cout << "Model Matrix: \n";
+    for (int i = 0; i < 4; i++) {
+        std::cout << m_model_matrix[i][0] << " " << m_model_matrix[i][1] << " "
+                  << m_model_matrix[i][2] << " " << m_model_matrix[i][3] << std::endl;
+    }
+
 }
 
 

@@ -25,6 +25,11 @@ struct GameState
     Map *map;
     Entity *player;
     Entity *enemies;
+    Entity *vamp1;
+    Entity *vamp2;
+    Entity *vamp3;
+    Entity *wolf;
+    Entity *edward;
     Entity *background;
     
     // ————— AUDIO ————— //
@@ -37,9 +42,10 @@ struct GameState
 
 class Scene {
 protected:
-    GameState m_game_state;
     
 public:
+    GameState m_game_state;
+
     // ————— ATTRIBUTES ————— //
     int m_number_of_enemies = 1;
     

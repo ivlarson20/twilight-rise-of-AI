@@ -1,4 +1,12 @@
-// ADD HEADER HERE
+/**
+* Author: [Isabelle Larson]
+* Assignment: Rise of the AI
+* Date due: 2025-04-07, 11:59pm
+* I pledge that I have completed this assignment without
+* collaborating with anyone else, in conformance with the
+* NYU School of Engineering Policies and Procedures on
+* Academic Misconduct.
+**/
 
 #define GL_SILENCE_DEPRECATION
 #define GL_GLEXT_PROTOTYPES 1
@@ -24,7 +32,10 @@
 #include "Map.h"
 #include "Utility.h"
 #include "Scene.h"
+#include "StartScreen.h"
 #include "LevelA.h"
+#include "LevelB.h"
+#include "LevelC.h"
 
 
 
@@ -44,17 +55,25 @@ constexpr int VIEWPORT_X = 0,
 
 constexpr char V_SHADER_PATH[] = "shaders/vertex_textured.glsl",
            F_SHADER_PATH[] = "shaders/fragment_textured.glsl";
-constexpr char BACKGROUND_FILEPATH[] = "assets/background1.jpg";
 
 
 constexpr float MILLISECONDS_IN_SECOND = 1000.0;
-constexpr glm::vec3 INIT_SCALE_BACK = glm::vec3(10.0f, 5.0f, 0.0f);
+constexpr glm::vec3 INIT_SCALE_BACK = glm::vec3(50.0f, 20.0f, 0.0f);
 
 
 
 // ––––– GLOBAL VARIABLES ––––– //
 Scene *g_current_scene;
 LevelA *g_level_a;
+LevelB *g_level_b;
+LevelC *g_level_c;
+
+//Effects *g_effects;
+Scene *g_levels[3];
+StartScreen *g_start_screen;
+
+int g_player_lives;
+
 
 SDL_Window* g_display_window;
 bool g_game_is_running = true;
@@ -104,18 +123,33 @@ void initialise()
 
     glClearColor(BG_RED, BG_BLUE, BG_GREEN, BG_OPACITY);
     
-    g_background_texture_id = Utility::load_texture(BACKGROUND_FILEPATH);
+    // enable background - delete if deciding to change background per level
+//    g_background_texture_id = Utility::load_texture(BACKGROUND_FILEPATH);
     
-    // level a
-    g_level_a = new LevelA();
-    switch_to_scene(g_level_a);
-    
-    
-    
-
-    // ––––– GENERAL ––––– //
+    // ––––– blending ––––– //
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    // start screen
+    g_start_screen = new StartScreen();
+    
+    
+    // level stuff
+    g_level_a = new LevelA();
+    g_level_b = new LevelB();
+    g_level_c = new LevelC();
+    
+    g_levels[0] = g_level_a;
+    g_levels[1] = g_level_b;
+    g_levels[2] = g_level_c;
+    
+    //start at start screen
+    switch_to_scene(g_start_screen);
+    
+    
+    
+    // add effect stuff here if time
+    
 }
 
 void process_input()
@@ -149,6 +183,11 @@ void process_input()
                         }
                          break;
                         
+                    case SDLK_RETURN:
+                        if (g_current_scene == g_start_screen){
+                            switch_to_scene(g_level_a);
+                        }
+                        
                     default:
                         break;
                 }
@@ -162,6 +201,7 @@ void process_input()
     const Uint8 *key_state = SDL_GetKeyboardState(NULL);
 
     if (key_state[SDL_SCANCODE_LEFT])        g_current_scene->get_state().player->move_left();
+  
     else if (key_state[SDL_SCANCODE_RIGHT])  g_current_scene->get_state().player->move_right();
      
     if (glm::length( g_current_scene->get_state().player->get_movement()) > 1.0f)
@@ -196,52 +236,32 @@ void update()
 
     g_accumulator = delta_time;
     
-    g_view_matrix = glm::mat4(1.0f);
-    
-    if (g_current_scene->get_state().player->get_position().x > LEVEL1_LEFT_EDGE) {
-        g_view_matrix = glm::translate(g_view_matrix, glm::vec3(-g_current_scene->get_state().player->get_position().x, 3.75, 0));
-    } else {
-        g_view_matrix = glm::translate(g_view_matrix, glm::vec3(-5, 3.75, 0));
+    if (g_current_scene == g_start_screen){
+        return;
     }
+    
+    g_view_matrix = glm::mat4(1.0f);
+
+    if (g_current_scene!= g_start_screen){
+        g_view_matrix = glm::translate(g_view_matrix, glm::vec3(-g_current_scene->get_state().player->get_position().x, 3.75, 0));
+    }
+    
+    g_player_lives = g_current_scene->m_game_state.player->get_lives();
+    
+  //  std::cout << g_player_lives << ", " << g_current_scene->m_game_state.player->get_lives() << std::endl;
+    
+   
+    
+    
+    
 }
 
-void draw_object(glm::mat4 object_g_model_matrix, GLuint object_texture_id)
-{
-    // Vertices
-    float vertices[] = {
-        -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,  // triangle 1
-        -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f   // triangle 2
-    };
 
-    // Textures
-    float texture_coordinates[] = {
-        0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,     // triangle 1
-        0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,     // triangle 2
-    };
-    
-    g_shader_program.set_model_matrix(object_g_model_matrix);
-    glVertexAttribPointer(g_shader_program.get_position_attribute(), 2, GL_FLOAT, false, 0, vertices);
-    glEnableVertexAttribArray(g_shader_program.get_position_attribute());
-    glVertexAttribPointer(g_shader_program.get_tex_coordinate_attribute(), 2, GL_FLOAT, false, 0, texture_coordinates);
-    glEnableVertexAttribArray(g_shader_program.get_tex_coordinate_attribute());
-    
-    glBindTexture(GL_TEXTURE_2D, object_texture_id);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    
-    // We disable two attribute arrays now
-    glDisableVertexAttribArray(g_shader_program.get_position_attribute());
-    glDisableVertexAttribArray(g_shader_program.get_tex_coordinate_attribute());
-
-}
 
 void render()
 {
     g_shader_program.set_view_matrix(g_view_matrix);
     glClear(GL_COLOR_BUFFER_BIT);
-    
-    draw_object(g_background_matrix, g_background_texture_id);
-
-    
 
     g_current_scene->render(&g_shader_program);
 
@@ -253,6 +273,9 @@ void shutdown()
     SDL_Quit();
 
     delete g_level_a;
+    delete g_level_b;
+    delete g_level_c;
+    delete g_start_screen;
 }
 
 // ––––– GAME LOOP ––––– //
@@ -264,6 +287,12 @@ int main(int argc, char* argv[])
     {
         process_input();
         update();
+        
+        if (g_current_scene->m_game_state.next_scene_id > 0){
+            switch_to_scene(g_levels[g_current_scene->m_game_state.next_scene_id]);
+            g_current_scene->m_game_state.player->set_lives(g_player_lives);
+        }
+        
         render();
     }
 

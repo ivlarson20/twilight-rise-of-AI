@@ -1,11 +1,22 @@
+/**
+* Author: [Isabelle Larson]
+* Assignment: Rise of the AI
+* Date due: 2025-04-07, 11:59pm
+* I pledge that I have completed this assignment without
+* collaborating with anyone else, in conformance with the
+* NYU School of Engineering Policies and Procedures on
+* Academic Misconduct.
+**/
+
 #ifndef ENTITY_H
 #define ENTITY_H
 
 #include "Map.h"
 #include "glm/glm.hpp"
 #include "ShaderProgram.h"
-enum EntityType { PLATFORM, PLAYER, ENEMY  };
-enum AIType     { WALKER, GUARD            };
+#include "Utility.h"
+enum EntityType { PLATFORM, PLAYER, ENEMY, EDWARD  };
+enum AIType     { WALKER, GUARD, WOLF, WIN };
 enum AIState    { WALKING, IDLE, ATTACKING };
 
 
@@ -14,7 +25,10 @@ enum AnimationDirection { LEFT, RIGHT, UP, DOWN };
 class Entity
 {
 private:
-    bool m_is_active = true;
+    ShaderProgram g_shader_program;
+
+    GLuint m_font_texture_id = Utility::load_texture("assets/font1.png");
+    //bool m_is_active = true;
     
     int m_walking[4][4]; // 4x4 array for walking animations
 
@@ -37,7 +51,6 @@ private:
     bool m_is_jumping;
 
     // ————— TEXTURES ————— //
-    GLuint    m_texture_id;
 
     // ————— ANIMATION ————— //
     int m_animation_cols;
@@ -57,6 +70,19 @@ private:
     bool m_collided_right  = false;
 
 public:
+    int m_left_bound;
+    int m_right_bound;
+    int m_wolf_direction;
+    int m_wolf_speed;
+    
+    
+    GLuint    m_texture_id;
+    
+    // lives stuff
+    int m_lives = 3;
+    bool m_is_active = true;
+    bool m_is_hit = false;
+
     // ————— STATIC VARIABLES ————— //
     static constexpr int SECONDS_PER_FRAME = 4;
 
@@ -85,6 +111,7 @@ public:
     void ai_activate(Entity *player);
     void ai_walk();
     void ai_guard(Entity *player);
+    void ai_wolf();
     
     void normalise_movement() { m_movement = glm::normalize(m_movement); }
 
@@ -99,6 +126,7 @@ public:
     void move_down() { m_movement.y = -1.0f; face_down(); }
     
     void const jump() { m_is_jumping = true; }
+    void lose_life();
 
     // ————— GETTERS ————— //
     EntityType const get_entity_type()    const { return m_entity_type;   };
@@ -116,6 +144,7 @@ public:
     bool      const get_collided_bottom() const { return m_collided_bottom; }
     bool      const get_collided_right() const { return m_collided_right; }
     bool      const get_collided_left() const { return m_collided_left; }
+    int       const get_lives()         const { return m_lives;     }
     
     void activate()   { m_is_active = true;  };
     void deactivate() { m_is_active = false; };
@@ -138,6 +167,7 @@ public:
     void const set_jumping_power(float new_jumping_power) { m_jumping_power = new_jumping_power;}
     void const set_width(float new_width) {m_width = new_width; }
     void const set_height(float new_height) {m_height = new_height; }
+    void const set_lives(float new_lives)   {m_lives = new_lives; }
 
     // Setter for m_walking
     void set_walking(int walking[4][4])
@@ -150,6 +180,10 @@ public:
             }
         }
     }
+    
+//    void show_win(){
+//        Utility::draw_text(&g_shader_program, m_font_texture_id, std::string("You found Edward\n You Win!"), 1.0f, -0.65f, glm::vec3(-3.2f, 0.0f, 0.0f));
+//    }
 };
 
 #endif // ENTITY_H

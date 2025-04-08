@@ -1,10 +1,12 @@
-//
-//  LevelA.cpp
-//  SDLProject
-//
-//  Created by isabelle larson on 4/6/25.
-//  Copyright © 2025 ctg. All rights reserved.
-//
+/**
+* Author: [Isabelle Larson]
+* Assignment: Rise of the AI
+* Date due: 2025-04-07, 11:59pm
+* I pledge that I have completed this assignment without
+* collaborating with anyone else, in conformance with the
+* NYU School of Engineering Policies and Procedures on
+* Academic Misconduct.
+**/
 
 #include "LevelA.h"
 #include "Utility.h"
@@ -15,18 +17,19 @@
 constexpr char SPRITESHEET_FILEPATH[] = "assets/bella.png";
 constexpr char PLATFROM_FILEPATH[] = "assets/tile.png";
 constexpr char ENEMY1_FILEPATH[] = "assets/vampire1.png";
-constexpr char BACKGROUND_FILEPATH[] = "assets/background1.png";
+constexpr char BACKGROUND_FILEPATH[] = "assets/background1.jpg";
+GLuint m_font_a;
 
 unsigned int LEVEL_DATA[] =
 {
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
-    3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
-    3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1,
+    1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 };
 
 LevelA::~LevelA(){
@@ -41,6 +44,9 @@ LevelA::~LevelA(){
 
 
 void LevelA::initialise(){
+    
+    m_font_a = Utility::load_texture("assets/font1.png");
+    
     GLuint map_texture_id = Utility::load_texture("assets/tile.png");
     m_game_state.map = new Map(LEVEL_WIDTH, LEVEL_HEIGHT, LEVEL_DATA, map_texture_id, 1.0f, 4, 1);
     
@@ -72,8 +78,10 @@ void LevelA::initialise(){
     );
     
     m_game_state.player->set_position(glm::vec3(5.0f, 0.0f, 0.0f));
+    m_game_state.player->set_lives(3);
     
     m_game_state.player->set_jumping_power(3.0f);
+    m_game_state.player->update(0, m_game_state.player, NULL, 0, m_game_state.map);
     
     // enemies
     
@@ -84,21 +92,30 @@ void LevelA::initialise(){
     for (int i = 0; i < ENEMY_COUNT; i++)
     {
     m_game_state.enemies[i] =  Entity(enemy_texture_id, 1.0f, 1.0f, 1.0f, ENEMY, GUARD, IDLE);
+       
+        m_game_state.enemies[i].set_movement(glm::vec3(0.0f));
+        m_game_state.enemies[i].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
+       
+
+        m_game_state.enemies[i].set_scale(glm::vec3(1.0f));
     }
 
 
-    m_game_state.enemies[0].set_position(glm::vec3(8.0f, 0.0f, 0.0f));
-    m_game_state.enemies[0].set_movement(glm::vec3(0.0f));
-    m_game_state.enemies[0].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
+    m_game_state.enemies[0].set_position(glm::vec3(0.0f, 0.0f, 0.0f));
+    m_game_state.enemies[0].update(0, &m_game_state.enemies[0], NULL, 0, m_game_state.map);
     
-    // background
-//    
-//    GLuint background_texture_id = Utility::load_texture(BACKGROUND_FILEPATH);
-//    m_game_state.background = new Entity();
-//    m_game_state.background->set_texture_id(background_texture_id);
-//
-//    m_game_state.background->set_position(glm::vec3(2.0f,0.0f,0.0f));
-//    m_game_state.background->set_scale(glm::vec3(9.0f, 9.0f, 0.0f));
+    
+
+    
+     //background
+    
+    m_game_state.background = new Entity();
+  //  m_game_state.background->set_lives(10000);
+    m_game_state.background->set_position(glm::vec3(10.5f,-4.0f,0.0f));
+    m_game_state.background->set_scale(glm::vec3(21.06f, 11.7f, 0.0f));
+    m_game_state.background->m_texture_id = Utility::load_texture(BACKGROUND_FILEPATH);
+    m_game_state.background->update(0.0f, m_game_state.background, NULL, 0, m_game_state.map);
+
     
     
     // ADD IN SOUND STUFF
@@ -107,21 +124,33 @@ void LevelA::initialise(){
 
 void LevelA::update(float delta_time)
 {
-    m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, ENEMY_COUNT, m_game_state.map);
     
-    for (int i = 0; i < ENEMY_COUNT; i++)
-    {
-        m_game_state.enemies[i].update(delta_time, m_game_state.player, NULL, NULL, m_game_state.map);
-    }
+    m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, ENEMY_COUNT, m_game_state.map);
+    m_game_state.enemies[0].update(0, m_game_state.player, &m_game_state.enemies[0], ENEMY_COUNT, m_game_state.map);
+        
+        if (m_game_state.player->get_position().y < -10.0f) m_game_state.next_scene_id = 1;
+    
 }
 
 
 void LevelA::render(ShaderProgram *g_shader_program)
 {
+    m_game_state.background->render(g_shader_program);
     m_game_state.map->render(g_shader_program);
     m_game_state.player->render(g_shader_program);
     for (int i = 0; i < m_number_of_enemies; i++)
             m_game_state.enemies[i].render(g_shader_program);
+    
+    if (!m_game_state.player->m_is_active) {
+        Utility::draw_text(g_shader_program, m_font_a, "Game Over", 1.0f, -0.65f, glm::vec3(-3.2f, 0.0f, 0.0f));
+    } else {
+        std::string lives_text = "Lives: " + std::to_string(m_game_state.player->m_lives);
+     
+        Utility::draw_text(g_shader_program, m_font_a, lives_text, 1.0f, -0.65, glm::vec3(7.0f, -0.5f, 0.0f));
+    }
+    
+    
+    
 }
 
 
