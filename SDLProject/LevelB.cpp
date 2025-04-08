@@ -133,6 +133,8 @@ void LevelB::initialise(){
     Mix_PlayMusic(m_game_state.bgm, -1);
     Mix_VolumeMusic(10.0f);
     
+    m_game_state.jump_sfx = Mix_LoadWAV("assets/BounceYoFrankie.wav");
+    m_game_state.wolf_sfx = Mix_LoadMUS("assets/wolf_monster.mp3");
 }
 
 void LevelB::update(float delta_time){

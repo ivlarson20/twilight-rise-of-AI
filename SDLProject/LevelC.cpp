@@ -129,13 +129,22 @@ void LevelC::initialise(){
     Mix_PlayMusic(m_game_state.bgm, -1);
     Mix_VolumeMusic(10.0f);
     
+    m_game_state.jump_sfx = Mix_LoadWAV("assets/BounceYoFrankie.wav");
+    m_game_state.wolf_sfx = Mix_LoadMUS("assets/wolf_monster.mp3");
+    m_game_state.win_sfx = Mix_LoadMUS("assets/applause_fireworks.mp3");
+    
 }
 
 void LevelC::update(float delta_time)
 {
-    Scene::update(delta_time);
 
     m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, ENEMY_COUNT, m_game_state.map);
+    
+    for (int i = 0; i < ENEMY_COUNT; i++){
+        Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+        m_game_state.enemies[i].update(delta_time, m_game_state.player, NULL, NULL, m_game_state.map);
+    }
+    
 
     
 }

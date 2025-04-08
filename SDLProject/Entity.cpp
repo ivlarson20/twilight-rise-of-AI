@@ -355,7 +355,6 @@ void const Entity::check_collision_x(Map *map)
 }
 void Entity::update(float delta_time, Entity *player, Entity *collidable_entities, int collidable_entity_count, Map *map)
 {
-    if(m_lives <= 0 && m_entity_type == ENEMY) deactivate();
     if (!m_is_active) return;
  
     m_collided_top    = false;
@@ -395,27 +394,38 @@ void Entity::update(float delta_time, Entity *player, Entity *collidable_entitie
     }
     
     m_position.y += m_velocity.y * delta_time;
-    
     check_collision_y(collidable_entities, collidable_entity_count);
     check_collision_y(map);
     
     m_position.x += m_velocity.x * delta_time;
     check_collision_x(collidable_entities, collidable_entity_count);
     check_collision_x(map);
-    
+
+    if (m_entity_type == ENEMY && player != nullptr && player->m_is_active)
+    {
+        if (check_collision(player))
+        {
+            // Only decrement if player still has lives left
+            if (player->m_lives > 0)
+            {
+                player->m_lives--;
+
+                
+
+            }
+
+            if (player->m_lives <= 0)
+            {
+                player->m_is_active = false; // "Game over" condition
+            }
+        }
+    }
+
     m_model_matrix = glm::mat4(1.0f);
     m_model_matrix = glm::translate(m_model_matrix, m_position);
     m_model_matrix = glm::scale(m_model_matrix, m_scale);
-    std::cout << "Entity type: " << m_entity_type << " | Position: "
-              << m_position.x << ", " << m_position.y << std::endl;
-
-    std::cout << "Model Matrix: \n";
-    for (int i = 0; i < 4; i++) {
-        std::cout << m_model_matrix[i][0] << " " << m_model_matrix[i][1] << " "
-                  << m_model_matrix[i][2] << " " << m_model_matrix[i][3] << std::endl;
-    }
-
 }
+
 
 
 void Entity::render(ShaderProgram* program)
