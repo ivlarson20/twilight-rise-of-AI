@@ -39,7 +39,10 @@ LevelC::~LevelC(){
     delete m_game_state.map;
     delete m_game_state.background;
 
+    
     // add music stuff
+    Mix_FreeMusic(m_game_state.bgm);
+    
 }
 
 
@@ -120,6 +123,12 @@ void LevelC::initialise(){
 
     // ADD IN SOUND STUFF
 
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+    
+    m_game_state.bgm = Mix_LoadMUS("assets/Night of the Owl.mp3");
+    Mix_PlayMusic(m_game_state.bgm, -1);
+    Mix_VolumeMusic(10.0f);
+    
 }
 
 void LevelC::update(float delta_time)

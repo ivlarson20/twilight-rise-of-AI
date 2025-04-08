@@ -109,7 +109,7 @@ public:
     void render(ShaderProgram* program);
 
     void ai_activate(Entity *player);
-    void ai_walk();
+    void ai_ambush(Entity *player);
     void ai_guard(Entity *player);
     void ai_wolf();
     
@@ -181,9 +181,7 @@ public:
         }
     }
     
-//    void show_win(){
-//        Utility::draw_text(&g_shader_program, m_font_texture_id, std::string("You found Edward\n You Win!"), 1.0f, -0.65f, glm::vec3(-3.2f, 0.0f, 0.0f));
-//    }
+
 };
 
 #endif // ENTITY_H

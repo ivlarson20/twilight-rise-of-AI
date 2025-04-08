@@ -28,7 +28,7 @@ void Entity::ai_activate(Entity *player)
     switch (m_ai_type)
     {
         case WALKER:
-            ai_walk();
+            ai_ambush(player);
             break;
             
         case GUARD:
@@ -48,9 +48,31 @@ void Entity::ai_activate(Entity *player)
     }
 }
 
-void Entity::ai_walk()
+void Entity::ai_ambush(Entity *player)
 {
-    m_movement = glm::vec3(-1.0f, 0.0f, 0.0f);
+    switch (m_ai_state){
+        case IDLE:
+            if (glm::distance(m_position, player->get_position()) < 2.0f){
+                m_ai_state = ATTACKING;
+            }
+            break;
+            
+        case ATTACKING:
+            if (player->get_position().x < m_position.x) {
+                m_movement = glm::vec3(-2.0f, 0.0f, 0.0f);
+            } else {
+            m_movement = glm::vec3(2.0f, 0.0f, 0.0f);  // Move fast towards the player
+            }
+            
+            m_ai_state = IDLE;
+            
+            break;
+            
+        case WALKING:
+            break;
+        default:
+            break;
+    }
 }
 
 void Entity::ai_guard(Entity *player)

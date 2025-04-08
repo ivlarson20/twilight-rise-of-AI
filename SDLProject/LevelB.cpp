@@ -127,6 +127,11 @@ void LevelB::initialise(){
     
 
     // add sound stuff
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+    
+    m_game_state.bgm = Mix_LoadMUS("assets/Night of the Owl.mp3");
+    Mix_PlayMusic(m_game_state.bgm, -1);
+    Mix_VolumeMusic(10.0f);
     
 }
 
