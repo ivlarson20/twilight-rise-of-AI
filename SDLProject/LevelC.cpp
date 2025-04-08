@@ -116,7 +116,7 @@ void LevelC::initialise(){
     
     // edward
     m_game_state.edward = new Entity();
-    m_game_state.edward->set_position(glm::vec3(6.0f, 3.0f, 0.0f));
+    m_game_state.edward->set_position(glm::vec3(13.0f, -2.1f, 0.0f));
     m_game_state.edward->set_entity_type(EDWARD);
     m_game_state.edward->m_texture_id = Utility::load_texture(EDWARD_FILEPATH);
 
@@ -127,11 +127,16 @@ void LevelC::initialise(){
     
     m_game_state.bgm = Mix_LoadMUS("assets/Night of the Owl.mp3");
     Mix_PlayMusic(m_game_state.bgm, -1);
-    Mix_VolumeMusic(10.0f);
+    Mix_VolumeMusic(14.0f);
     
     m_game_state.jump_sfx = Mix_LoadWAV("assets/BounceYoFrankie.wav");
-    m_game_state.wolf_sfx = Mix_LoadMUS("assets/wolf_monster.mp3");
     m_game_state.win_sfx = Mix_LoadMUS("assets/applause_fireworks.mp3");
+    
+    if (m_game_state.player->m_is_active){
+        Mix_PlayMusic(m_game_state.wolf_sfx, -1);
+        Mix_VolumeMusic(7.0f);
+    }
+   
     
 }
 
@@ -140,11 +145,12 @@ void LevelC::update(float delta_time)
     
     m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, ENEMY_COUNT, m_game_state.map);
     m_game_state.enemies[0].update(delta_time, m_game_state.player, NULL, NULL, m_game_state.map);
+    m_game_state.edward->update(delta_time, m_game_state.player, NULL, NULL, m_game_state.map);
         
       //  if (m_game_state.player->get_position().y < -10.0f) m_game_state.next_scene_id = 1;
     
     for (int i = 0; i < ENEMY_COUNT; i++){
-        Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+
         m_game_state.enemies[i].update(delta_time, m_game_state.player, NULL, NULL, m_game_state.map);
     }
     
@@ -163,11 +169,14 @@ void LevelC::render(ShaderProgram *g_shader_program)
     m_game_state.edward->render(g_shader_program);
     
     if (!m_game_state.player->m_is_active) {
-        Utility::draw_text(g_shader_program, m_font_c, "Game Over", 1.0f, -0.65f, glm::vec3(-3.2f, 0.0f, 0.0f));
+        Utility::draw_text(g_shader_program, m_font_c, "Game Over", 1.0f, -0.5f, glm::vec3(5.2f, -2.0f, 0.0f));
     } else {
         std::string lives_text = "Lives: " + std::to_string(m_game_state.player->m_lives);
      
         Utility::draw_text(g_shader_program, m_font_c, lives_text, 1.0f, -0.65, glm::vec3(7.0f, -0.5f, 0.0f));
+    }
+    if (m_game_state.player->m_wins){
+        Utility::draw_text(g_shader_program, m_font_c, "You Win!!", 1.0f, -0.5f, glm::vec3(5.2f, -2.0f, 0.0f));
     }
     
    

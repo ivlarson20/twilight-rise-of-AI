@@ -104,9 +104,10 @@ void LevelB::initialise(){
         m_game_state.enemies[i].set_movement(glm::vec3(0.0f));
         m_game_state.enemies[i].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
     }
-    m_game_state.enemies[0].set_position(glm::vec3(3.0f, 0.0f, 0.0f));
-    m_game_state.enemies[0].set_texture_id(enemy_texture_id);
-    m_game_state.enemies[1].set_texture_id(enemy2_texture_id);
+    m_game_state.enemies[0].set_position(glm::vec3(6.0f, 0.0f, 0.0f));
+    m_game_state.enemies[1].set_position(glm::vec3(3.0f, -5.0f, 0.0f));
+    m_game_state.enemies[0].set_texture_id(enemy_texture_id); // brown hair
+    m_game_state.enemies[1].set_texture_id(enemy2_texture_id); // blondie
     m_game_state.enemies[0].set_ai_type(WALKER);
     m_game_state.enemies[1].set_ai_type(GUARD);
     m_game_state.enemies[1].update(0, &m_game_state.enemies[0], NULL, 0, m_game_state.map);
@@ -131,10 +132,9 @@ void LevelB::initialise(){
     
     m_game_state.bgm = Mix_LoadMUS("assets/Night of the Owl.mp3");
     Mix_PlayMusic(m_game_state.bgm, -1);
-    Mix_VolumeMusic(10.0f);
+    Mix_VolumeMusic(14.0f);
     
     m_game_state.jump_sfx = Mix_LoadWAV("assets/BounceYoFrankie.wav");
-    m_game_state.wolf_sfx = Mix_LoadMUS("assets/wolf_monster.mp3");
 }
 
 void LevelB::update(float delta_time){
@@ -153,10 +153,7 @@ void LevelB::update(float delta_time){
 void LevelB::render(ShaderProgram *program)
 {
     m_game_state.background->render(program);
-    // game over message
-//    if (m_game_state.player->get_lives() <= 0){
-//        Utility::draw_text(program, GL_SYSTEM_FONT_NAME_NV, <#std::string text#>, <#float screen_size#>, <#float spacing#>, <#glm::vec3 position#>)
-//    }
+
     
     m_game_state.map->render(program);
     m_game_state.player->render(program);
@@ -164,7 +161,7 @@ void LevelB::render(ShaderProgram *program)
             m_game_state.enemies[i].render(program);
     
     if (!m_game_state.player->m_is_active) {
-        Utility::draw_text(program, m_font_b, "Game Over", 1.0f, -0.65f, glm::vec3(-3.2f, 0.0f, 0.0f));
+        Utility::draw_text(program, m_font_b, "Game Over", 1.0f, -0.65f, glm::vec3(5.2f, -2.0f, 0.0f));
     } else {
         std::string lives_text = "Lives: " + std::to_string(m_game_state.player->m_lives);
      

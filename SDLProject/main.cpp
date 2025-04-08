@@ -144,7 +144,7 @@ void initialise()
     g_levels[2] = g_level_c;
     
     //start at start screen
-    switch_to_scene(g_start_screen);
+    switch_to_scene(g_level_c);
     
     
     

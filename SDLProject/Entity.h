@@ -81,6 +81,7 @@ public:
     // lives stuff
     int m_lives = 3;
     bool m_is_active = true;
+    bool m_wins = false;
     bool m_is_hit = false;
 
     // ————— STATIC VARIABLES ————— //

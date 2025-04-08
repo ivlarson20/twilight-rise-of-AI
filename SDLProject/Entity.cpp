@@ -61,7 +61,7 @@ void Entity::ai_ambush(Entity *player)
             if (player->get_position().x < m_position.x) {
                 m_movement = glm::vec3(-2.0f, 0.0f, 0.0f);
             } else {
-            m_movement = glm::vec3(2.0f, 0.0f, 0.0f);  // Move fast towards the player
+            m_movement = glm::vec3(4.0f, 0.0f, 0.0f);  // Move fast towards the player
             }
             
             m_ai_state = IDLE;
@@ -401,7 +401,7 @@ void Entity::update(float delta_time, Entity *player, Entity *collidable_entitie
     check_collision_x(collidable_entities, collidable_entity_count);
     check_collision_x(map);
 
-    if (m_entity_type == ENEMY && player != nullptr && player->m_is_active)
+    if (m_entity_type == ENEMY || m_entity_type == WOLF && player != nullptr && player->m_is_active)
     {
         if (check_collision(player))
         {
@@ -418,6 +418,12 @@ void Entity::update(float delta_time, Entity *player, Entity *collidable_entitie
             {
                 player->m_is_active = false; // "Game over" condition
             }
+        }
+    }
+    if (m_entity_type == EDWARD && player!= nullptr && player->m_is_active){
+        if (check_collision(player)){
+            // you win
+            player->m_wins = true;
         }
     }
 
